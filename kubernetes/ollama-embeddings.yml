@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama-embeddings
+  labels:
+    app: ollama-embeddings
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama-embeddings
+  template:
+    metadata:
+      labels:
+        app: ollama-embeddings
+    spec:
+      containers:
+        - name: ollama-embeddings
+          image: ollama-embeddings:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 11434
+          env:
+            - name: OLLAMA_EMBEDDING_MODEL
+              value: "nomic-embed-text"
+            - name: OLLAMA_PORT
+              value: "11434"
+          volumeMounts:
+            - name: ollama-embeddings-data
+              mountPath: /root/.ollama
+      volumes:
+      - name: ollama-embeddings-data
+        hostPath:
+          path: /ollama/models
+          type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-embeddings
+  labels:
+    app: ollama-embeddings
+spec:
+  type: ClusterIP
+  selector:
+    app: ollama-embeddings
+  ports:
+    - name: http
+      protocol: TCP
+      port: 11434
+      targetPort: 11434
+

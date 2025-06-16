@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama-chat
+  labels:
+    app: ollama-chat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama-chat
+  template:
+    metadata:
+      labels:
+        app: ollama-chat
+    spec:
+      containers:
+        - name: ollama-chat
+          image: ollama-chat:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 11434
+          env:
+            - name: OLLAMA_CHAT_MODEL
+              value: "llama3.2:latest"
+            - name: OLLAMA_PORT
+              value: "11434"
+          volumeMounts:
+            - name: ollama-models
+              mountPath: /root/.ollama
+          readinessProbe:
+            exec:
+              command: ["cat", "/tmp/model_ready"]
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 10
+      volumes:
+        - name: ollama-models
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-chat
+  labels:
+    app: ollama-chat
+spec:
+  type: ClusterIP
+  selector:
+    app: ollama-chat
+  ports:
+    - name: http
+      protocol: TCP
+      port: 11434
+      targetPort: 11434

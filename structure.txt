@@ -1,0 +1,36 @@
+project-root/
+├── ollama-main/
+│   ├── Dockerfile
+│   └── entrypoint.sh        ← setup model sebelum serve
+│
+├── ollama-embeeddings/
+│   ├── Dockerfile
+│   └── entrypoint.sh        ← setup model sebelum serve
+│
+├── embeeddings/
+│   ├── Dockerfile
+│   ├── entrypoint.sh
+│   ├── requirements.txt     ← langchain, chromadb, PyPDF2, etc.
+│   ├── embeeddings.py       ← load PDF, generate embedding
+│   └── data/
+│       └── pdf/
+│
+├── api/
+│   ├── Dockerfile
+│   ├── requirements.txt     ← fastapi, httpx
+│   └── main.py              ← FastAPI: menerima query, panggil embeeddings + ollama
+│
+├── streamlit-ui/
+│   ├── Dockerfile
+│   ├── requirements.txt     ← streamlit, requests
+│   └── app.py               ← chat ke endpoint API
+│
+├── kubernetes/
+│   ├── ollama-main.yaml
+│   ├── ollama-embeeddings.yaml
+│   ├── embeeddings.yaml
+│   ├── api.yaml
+│   └── streamlit.yaml
+│
+├── deploy.sh
+└── README.md

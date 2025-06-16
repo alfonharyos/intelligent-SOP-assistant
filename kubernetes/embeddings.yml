@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: embeddings-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: embeddings
+          image: embeddings:latest
+          imagePullPolicy: Never
+          command: ["python", "embeddings.py"]
+          volumeMounts:
+            - name: chroma
+              mountPath: /data/chroma
+          env:
+            - name: OLLAMA_EMBEDDING_MODEL
+              value: "nomic-embed-text"
+            - name: OLLAMA_EMBEDDING_URL
+              value: "http://ollama-embeddings:11434"
+            - name: PDF_FILE
+              value: "/data/pdf/buku_saku_studio.pdf"
+            - name: CHROMA_DIR
+              value: "/data/chroma"
+      restartPolicy: Never
+      volumes:
+        - name: chroma
+          hostPath:
+            path: /embeddings/data/chroma
+            type: DirectoryOrCreate
