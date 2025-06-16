@@ -182,7 +182,7 @@ kubectl port-forward deployment/streamlit-ui 8501:8501
 
 ## Hasil
 Hasil 1
-![hasil-1](..\img\hasil-1.png)
+![hasil-1](/intelligent-SOP-assistant/blob/main/img/hasil-1.png)
 
 Hasil 2
 ![hasil-2](..\img\hasil-2.png)
